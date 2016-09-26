@@ -31,4 +31,4 @@ pick_rep_set.py -i $cwd/swarm_otu/seqs_otus.txt -f $cwd/qiime_split_library/seqs
 
 align_seqs.py -i $cwd/swarm_otu/rep_set.fna -o $cwd/swarm_otu/pynast_aligned ;
 
-sbatch -p med -A millsgrp -N 1 -n 24 Step4_Chimera_parallel.sh
+sbatch -p med -A millsgrp Step4_OTU_tables_serial.sh
