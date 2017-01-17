@@ -12,7 +12,7 @@
 # Barcode files should be saved in same working directory as raw .fastq files
 # This script can handle up to 4 sets of fastq files
 # This script assumes sequencing of the V4 region of 16S using 8 bp barcodes and 515F/806R primers
-# This script assumes that Diana has a current version of the 97_otu files for assigning taxonomy in her folder on the farm
+# This script assumes that kmkalangrp drive has a current version of 97_otus in the 16S_ITS_references folder
 # Please place this script file AND all other step script files into your current working directory with the forward fastq(s), reverse fastq(s), 
 #             barcode file (s), and mapping file
 
