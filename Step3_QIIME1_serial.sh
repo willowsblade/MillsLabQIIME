@@ -19,6 +19,8 @@
 module load R matplotlib numpy qiime/1.9.1
 map="lactation_map.txt"
 
+cwd=$(pwd)
+
 files=$(ls $cwd/trim_only/*.complete.trim.fastq -m | sed -e 's/, /,/g' | tr -d '\n') 
 ls $cwd/trim_only | cut -f 1 -d '.' > test.txt
 name=$(cat test.txt | tr -s ' ' | cut -d ' ' -f 2 | tr '\n' ',' | sed 's/,$//')
