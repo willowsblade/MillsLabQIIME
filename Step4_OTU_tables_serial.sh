@@ -22,7 +22,7 @@ cwd=$(pwd)
 
 filter_alignment.py -i $cwd/swarm_otu/pynast_aligned/rep_set_aligned.fasta -o $cwd/swarm_otu/filter_alignment_with_chimera ;
 
-assign_taxonomy.py -i $cwd/swarm_otu/rep_set.fna -t /home/dhtaft/ABX_project/97_otus/97_otu_taxonomy.txt -r /home/dhtaft/ABX_project/97_otus/97_otus.fasta -o $cwd/swarm_otu/assigned_taxonomy ;
+assign_taxonomy.py -i $cwd/swarm_otu/rep_set.fna -t /group/kmkalangrp/16S_ITS_references/97_otus/97_otu_taxonomy.txt -r /group/kmkalangrp/16S_ITS_references/97_otus/97_otus.fasta -o $cwd/swarm_otu/assigned_taxonomy ;
 
 make_otu_table.py -i $cwd/swarm_otu/seqs_otus.txt -o $cwd/swarm_otu/otu_table_with_chimera.biom -e $cwd/swarm_otu/pynast_aligned/rep_set_failures.fasta ;
 
