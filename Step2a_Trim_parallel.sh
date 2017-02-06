@@ -28,4 +28,4 @@ trim () {
 }
 for file in $cwd/demultiplex/*.fastq; do trim "$file" & done
 
-sbatch -p med -A millsgrp -N 1 -n 24 Step2b_Clip_parallel.sh
+sbatch -p med -A millsgrp -N 1 -n 24 Step2c_link_parallel.sh
