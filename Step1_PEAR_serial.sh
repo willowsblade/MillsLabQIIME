@@ -9,6 +9,7 @@
 
 # PLEASE REMEMBER TO CHANGE EMAIL BEFORE SUBMITTING
 # This file should be saved in the same directory as your raw .fastq files.  PEAR barcode files should be text tab delimited with unix endings
+# Do not edit name of reverse files if you ran the prestep file.
 # Barcode files should be saved in same working directory as raw .fastq files
 # This script can handle up to 4 sets of fastq files
 # This script assumes sequencing of the V4 region of 16S using 8 bp barcodes and 515F/806R primers
@@ -24,7 +25,7 @@ mkdir $cwd/demultiplex/
 #Forward fastq 1
 forward1="Lstud1_S1_L001_R1_001.fastq"
 #Reverse fastq 1
-reverse1="Lstud1_S1_L001_R2_001.fastq"
+reverse1="trimmed_reverse1.fast1"
 #barcode file
 bar1="barcode_run1.txt"
 #QIIME mapping file, should be 1 combined file for ALL samples 
@@ -34,13 +35,13 @@ map="lactation_map.txt"
 
 #If you have more than 1 set of fastq files, remove # sign from following lines and insert file names
 #forward2="Lstud2_S1_L001_R1_001.fastq"
-#reverse2="Lstud2_S1_L001_R2_001.fastq"
+#reverse2="trimmed_reverse2.fastq"
 #bar2="barcode_run2.txt"
 #forward3="Lstud3_S1_L001_R1_001.fastq"
-#reverse3="Lstud3_S1_L001_R2_001.fastq"
+#reverse3="trimmed_reverse3.fastq"
 #bar3="barcode_run3.txt"
 #forward4="FILE4R1.fastq"
-#reverse4="FILE4R2.fastq"
+#reverse4="trimmed_reverse4.fastq"
 #bar4="barcode4.txt"
 
 #STEP 1:  Merge the paired end reads
