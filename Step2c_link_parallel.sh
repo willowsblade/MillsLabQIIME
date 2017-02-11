@@ -23,12 +23,12 @@ cwd=$(pwd)
 #Part 3:  Create a directory containing ONLY the completely trimmed fastq files, use symbolic link to save space
 mkdir $cwd/trim_only
 cd $cwd/trim_only
-for file in $cwd/demultiplex/*.complete.trim.fastq
+for file in $cwd/demultiplex/*.trimmed.fastq
 do
 	ln -s $file
 done
 
-rm $cwd/trim_only/unmatched.complete.trim.fastq
+rm $cwd/trim_only/unmatched.trimmed.fastq
 
 cd $cwd
 
