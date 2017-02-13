@@ -21,7 +21,7 @@ map="lactation_map.txt"
 
 cwd=$(pwd)
 
-files=$(ls $cwd/trim_only/*.complete.trim.fastq -m | sed -e 's/, /,/g' | tr -d '\n') 
+files=$(ls $cwd/trim_only/*.trimmed.fastq -m | sed -e 's/, /,/g' | tr -d '\n') 
 ls $cwd/trim_only | cut -f 1 -d '.' > test.txt
 name=$(cat test.txt | tr -s ' ' | cut -d ' ' -f 2 | tr '\n' ',' | sed 's/,$//')
 split_libraries_fastq.py -i $files --sample_ids $name -o $cwd/qiime_split_library --barcode_type 'not-barcoded' -m $cwd/$map ;
