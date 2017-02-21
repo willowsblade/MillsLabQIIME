@@ -27,5 +27,5 @@ fastx_trimmer -f 21 -i $reverse2 -o trimmed_reverse2.fastq &&
 fastx_trimmer -f 21 -i $reverse3 -o trimmed_reverse3.fastq &&
 #fastx_trimmer -f 21 -i $reverse4 -o trimmed_reverse4.fastq &&
 
-sbatch -p med -A millsgrp -t 15000 --mem 7-00:00:00 Step1_Pear_serial.sh
+sbatch -p med -A millsgrp -t 7-00:00:00 --mem 15000 Step1_Pear_serial.sh
 
