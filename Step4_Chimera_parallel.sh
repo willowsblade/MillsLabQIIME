@@ -18,6 +18,8 @@
 
 module load R matplotlib numpy qiime/1.9.1
 
+cwd=$(pwd)
+
 parallel_identify_chimeric_seqs.py -i $cwd/swarm_otu/pynast_aligned/rep_set_aligned.fasta -a $cwd/swarm_otu/pynast_aligned/rep_set_aligned.fasta -o $cwd/swarm_otu/chimeric_seqs.txt ;
 
 sbatch -p med -A millsgrp Step5_filter_serial.sh
