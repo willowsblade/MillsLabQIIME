@@ -1,0 +1,117 @@
+#As we anticipate changing primers soon, I am not taking the time to figure out a set of batch files that will automatically
+#call the next step. I will list the commands in the order they should be run, and will note what modules need to be loaded for 
+#each step.  
+
+#Step 1:  make directories for demultiplexed files, one directory per sequencing run in the directory with your sequencing files
+mkdir demultiplex
+mkdir demultiplex2
+mkdir demultiplex3
+mkdir demultiplex4
+
+#Step 2:  Use PEAR to merge reads
+module load pear
+pear -f file_R1_1.fastq -r file_R2_1.fastq -o pear -v 120 -m 380 -n 250
+pear -f file_R1_2.fastq -r file_R2_2.fastq -o pear -v 120 -m 380 -n 250
+pear -f file_R1_3.fastq -r file_R2_3.fastq -o pear -v 120 -m 380 -n 250
+pear -f file_R1_4.fastq -r file_R2_4.fastq -o pear -v 120 -m 380 -n 250
+
+#Step 3:  Demultiplex the files
+module load perlbrew fastx
+fastx_barcode_splitter.pl --bcfile barcode1.txt --prefix demultiplex --suffix .fastq --bol < pear.assembled.fastq
+fastx_barcode_splitter.pl --bcfile barcode2.txt --prefix demultiplex2 --suffix .fastq --bol < pear2.assembled.fastq
+fastx_barcode_splitter.pl --bcfile barcode3.txt --prefix demultiplex3 --suffix .fastq --bol < pear3.assembled.fastq
+fastx_barcode_splitter.pl --bcfile barcode4.txt --prefix demultiplex4 --suffix .fastq --bol < pear4.assembled.fastq
+
+#Step 4:  Reverse complement unmatched files
+module load perlbrew fastx
+fastx_reverse_complement -i demultiplex/unmatched.fastq -o demultiplex/unmatched.rc.fastq
+fastx_reverse_complement -i demultiplex2/unmatched.fastq -o demultiplex2/unmatched.rc.fastq
+fastx_reverse_complement -i demultiplex3/unmatched.fastq -o demultiplex3/unmatched.rc.fastq
+fastx_reverse_complement -i demultiplex4/unmatched.fastq -o demultiplex4/unmatched.rc.fastq
+
+#Step 5:  Demultiplex the reverse complemented reads
+fastx_barcode_splitter.pl --bcfile barcode1.txt --prefix demultiplex/ --suffix .rc2.fastq --bol < demultiplex/unmatched.rc.fastq
+fastx_barcode_splitter.pl --bcfile barcode2.txt --prefix demultiplex2/ --suffix .rc2.fastq --bol < demultiplex2/unmatched.rc.fastq
+fastx_barcode_splitter.pl --bcfile barcode3.txt --prefix demultiplex3/ --suffix .rc2.fastq --bol < demultiplex3/unmatched.rc.fastq
+fastx_barcode_splitter.pl --bcfile barcode4.txt --prefix demultiplex4/ --suffix .rc2.fastq --bol < demultiplex4/unmatched.rc.fastq
+
+#Step 6a:  Create a list of files to concatenate using the barcode files
+awk '{ print $1 }' barcode1.txt > list.txt
+awk '{ print $1 }' barcide2.txt > list2.txt
+awk '{ print $1 }' barcode3.txt > list3.txt
+awk '{ print $1 }' barcode4.txt > list4.txt
+
+#Step 6b:  Keep going to make the list look the way it will need to for the step 8
+sed 1d list.txt > list.2.txt
+sed 1d list2.txt > list2.2.txt
+sed 1d list3.txt > list3.2.txt
+sed 1d list4.txt > list4.2.txt
+
+#Step 7:  Make a directory to store concatenated files
+mkdir alldemulti
+
+#Step 8:  Concatenate files of demultiplexed reads belonging to the same sample, and write the output to the alldemulti folder
+while read id
+do 
+	cat demultiplex/$id.fastq demultiplex/$id.rc2.fastq > alldemulti/$id.combo.fastq
+done < list.2.txt
+	
+while read id
+do 
+	cat demultiplex2/$id.fastq demultiplex2/$id.rc2.fastq > alldemulti/$id.combo.fastq
+done < list2.2.txt
+
+while read id
+do 
+	cat demultiplex3/$id.fastq demultiplex3/$id.rc2.fastq > alldemulti/$id.combo.fastq
+done < list3.2.txt
+
+while read id
+do 
+	cat demultiplex4/$id.fastq demultiplex4/$id.rc2.fastq > alldemulti/$id.combo.fastq
+done < list4.2.txt
+
+#Step 9:  Make directories to store files after trimming reverse and forward primers
+mkdir trim_reverse
+mkdir trim_forward
+
+#Step 10a:  Make a list of the files to trim
+ls alldemulti/*.combo.fastq > trim.txt
+
+#Step 10b:  Keep going for formatting reasons
+cut -f2 -d '/' trim.txt | cut -f1 -d '.' > trim2.txt
+
+#Step 11:  Trim out the reverse primer
+module load python cutadapt
+while read trim
+do
+	cd $cwd/trim_reverse
+	cutadapt -a ATTAGAWACCCBNGTAGTCC $cwd/alldemulti/$trim.combo.fastq > $trim.reverse_trim.fastq
+	cd $cwd
+done < trim2.txt
+
+#Step 12:  Trim out the forward primer
+module load python cutadapt
+while read trim
+do
+	cd $cwd/trim_forward
+	cutadapt -g GTGYCAGCMGCCGCGGTAA $cwd/trim_reverse/$trim.reverse_trim.fastq > $trim.both_trim.fastq
+	cd $cwd
+done < trim2.txt
+
+#Step 13:  Load the whole mess into QIIME
+module load R matplotlib numpy qiime
+files=$(ls trim_forward/*.both_trim.fastq -m | sed -e 's/, /,/g' | tr -d '\n') 
+ls trim_forward | cut -f 1 -d '.' > test.txt
+name=$(cat test.txt | tr -s ' ' | cut -d ' ' -f 2 | tr '\n' ',' | sed 's/,$//')
+split_libraries_fastq.py -i $files --sample_ids $name -o qiime_split_library --barcode_type 'not-barcoded' -m mapping_file.txt
+
+#Step 14:  Pick OTUs with swarm
+#NOTE:  a -d of 1 instead of 4 might be worthwhile
+pick_otus.py -i $cwd/qiime_split_library/seqs.fna -m swarm -o $cwd/swarm_otu --denovo_otu_id_prefix OTU --swarm_resolution 4
+
+#Step 15:  Pick OTU rep set
+pick_rep_set.py -i $cwd/swarm_otu/seqs_otus.txt -f $cwd/qiime_split_library/seqs.fna -o $cwd/swarm_otu/rep_set.fna -m most_abundant &&
+
+#Step 16:  Align OTUs
+align_seqs.py -i $cwd/swarm_otu/rep_set.fna -o $cwd/swarm_otu/pynast_aligned
