@@ -115,3 +115,8 @@ pick_rep_set.py -i $cwd/swarm_otu/seqs_otus.txt -f $cwd/qiime_split_library/seqs
 
 #Step 16:  Align OTUs
 align_seqs.py -i $cwd/swarm_otu/rep_set.fna -o $cwd/swarm_otu/pynast_aligned
+
+#Step 17: Filter alignment
+filter_alignment.py -i swarm_otu/pynast_aligned/rep_set_aligned.fasta -o swarm_otu/filtered_alignment
+
+#Step 18:  Assign Taxonomy
