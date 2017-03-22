@@ -120,3 +120,4 @@ align_seqs.py -i $cwd/swarm_otu/rep_set.fna -o $cwd/swarm_otu/pynast_aligned
 filter_alignment.py -i swarm_otu/pynast_aligned/rep_set_aligned.fasta -o swarm_otu/filtered_alignment
 
 #Step 18:  Assign Taxonomy
+assign_taxonomy.py -i swarm_otu/rep_set.fna -t /group/kmkalangrp/databases/16S_ITS_references/97_otus_7_16/97_otu_taxonomy.txt -r /group/kmkalangrp/databases/16S_ITS_references/97_otus_7_16/97_otus.fasta -o swarm_otu/assigned_taxonomy
