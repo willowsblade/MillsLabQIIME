@@ -121,3 +121,13 @@ filter_alignment.py -i swarm_otu/pynast_aligned/rep_set_aligned.fasta -o swarm_o
 
 #Step 18:  Assign Taxonomy
 assign_taxonomy.py -i swarm_otu/rep_set.fna -t /group/kmkalangrp/databases/16S_ITS_references/97_otus_7_16/97_otu_taxonomy.txt -r /group/kmkalangrp/databases/16S_ITS_references/97_otus_7_16/97_otus.fasta -o swarm_otu/assigned_taxonomy
+
+#Step 19:  Make OTU Table
+make_otu_table.py -i swarm_otu/seqs_otus.txt -o swarm_otu/otu_table.biom -e swarm_otu/pynast_aligned/rep_set_failures.fasta
+
+#Step 20:  Add taxa data to OTU table
+biom add-metadata -i swarm_otu/otu_table.biom -o swarm_otu/otu_table_w_taxa.biom --observation-metadata-fp swarm_otu/assigned_taxonomy/rep_set_tax_assignments.txt --observation-header OTUID,taxonomy --sc-separated taxonomy
+
+#Step 21:  Make a phylogenetic tree
+make_phylogeny.py -i swarm_otu/filtered_alignment/rep_set_aligned_pfiltered.fasta -o swarm_otu/filtered_alignment/rep_set_aligned_pfiltered.tre
+
