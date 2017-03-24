@@ -37,7 +37,7 @@ fastx_barcode_splitter.pl --bcfile barcode4.txt --prefix demultiplex4/ --suffix 
 
 #Step 6a:  Create a list of files to concatenate using the barcode files
 awk '{ print $1 }' barcode1.txt > list.txt
-awk '{ print $1 }' barcide2.txt > list2.txt
+awk '{ print $1 }' barcode2.txt > list2.txt
 awk '{ print $1 }' barcode3.txt > list3.txt
 awk '{ print $1 }' barcode4.txt > list4.txt
 
