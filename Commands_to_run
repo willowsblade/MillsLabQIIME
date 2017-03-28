@@ -99,6 +99,36 @@ do
 	cd $cwd
 done < trim2.txt
 
+#Step 12 alternative:  Remove forward primer and remove reads that do not contain forward primer
+module load python cutadapt 
+while read trim
+
+do
+
+cd $cwd/trim_forward
+
+cutadapt -g GTGYCAGCMGCCGCGGTAA --discard-untrimmed $cwd/trim_reverse/$trim.reverse_trim.fastq > $trim.both_trim.fastq
+
+cd $cwd
+
+done < trim2.txt
+
+And:
+#Step 12 alternative 2:  Remove forward primer and remove reads that are too long to have been trimmed successfully
+module load python cutadapt 
+while read trim
+
+do
+
+cd $cwd/trim_forward
+
+cutadapt -g GTGYCAGCMGCCGCGGTAA -M 278 $cwd/trim_reverse/$trim.reverse_trim.fastq > $trim.both_trim.fastq
+
+cd $cwd
+
+done < trim2.txt
+
+
 #Step 13:  Load the whole mess into QIIME
 module load R matplotlib numpy qiime
 files=$(ls trim_forward/*.both_trim.fastq -m | sed -e 's/, /,/g' | tr -d '\n') 
