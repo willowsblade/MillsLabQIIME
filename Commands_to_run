@@ -162,4 +162,4 @@ biom add-metadata -i swarm_otu/otu_table.biom -o swarm_otu/otu_table_w_taxa.biom
 make_phylogeny.py -i swarm_otu/filtered_alignment/rep_set_aligned_pfiltered.fasta -o swarm_otu/filtered_alignment/rep_set_aligned_pfiltered.tre
 
 #Step 23:  Remove singletons and OTUs that only occur in a single sample (leave the ones in a single sample if either of the step 12 alternatives were used)
-filter_otus_from_otu_table.py -i swarn_otu/otu_table_w_taxa.biom -o no_singleton_otu.biom -n 2 -s 2
+filter_otus_from_otu_table.py -i swarm_otu/otu_table_w_taxa.biom -o swarm_otu/no_singleton_otu.biom -n 2 -s 2
