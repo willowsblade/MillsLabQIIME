@@ -17,10 +17,10 @@ pear -f file_R1_4.fastq -r file_R2_4.fastq -o pear -v 120 -m 380 -n 250
 
 #Step 3:  Demultiplex the files
 module load perlbrew fastx
-fastx_barcode_splitter.pl --bcfile barcode1.txt --prefix demultiplex --suffix .fastq --bol < pear.assembled.fastq
-fastx_barcode_splitter.pl --bcfile barcode2.txt --prefix demultiplex2 --suffix .fastq --bol < pear2.assembled.fastq
-fastx_barcode_splitter.pl --bcfile barcode3.txt --prefix demultiplex3 --suffix .fastq --bol < pear3.assembled.fastq
-fastx_barcode_splitter.pl --bcfile barcode4.txt --prefix demultiplex4 --suffix .fastq --bol < pear4.assembled.fastq
+fastx_barcode_splitter.pl --bcfile barcode1.txt --prefix demultiplex/ --suffix .fastq --bol < pear.assembled.fastq
+fastx_barcode_splitter.pl --bcfile barcode2.txt --prefix demultiplex2/ --suffix .fastq --bol < pear2.assembled.fastq
+fastx_barcode_splitter.pl --bcfile barcode3.txt --prefix demultiplex3/ --suffix .fastq --bol < pear3.assembled.fastq
+fastx_barcode_splitter.pl --bcfile barcode4.txt --prefix demultiplex4/ --suffix .fastq --bol < pear4.assembled.fastq
 
 #Step 4:  Reverse complement unmatched files
 module load perlbrew fastx
