@@ -82,6 +82,7 @@ ls alldemulti/*.combo.fastq > trim.txt
 cut -f2 -d '/' trim.txt | cut -f1 -d '.' > trim2.txt
 
 #Step 11:  Trim out the reverse primer
+cwd=$(pwd)
 module load python cutadapt
 while read trim
 do
@@ -91,6 +92,7 @@ do
 done < trim2.txt
 
 #Step 12:  Trim out the forward primer
+cwd=$(pwd)
 module load python cutadapt
 while read trim
 do
@@ -100,32 +102,24 @@ do
 done < trim2.txt
 
 #Step 12 alternative:  Remove forward primer and remove reads that do not contain forward primer
+cwd=$(pwd)
 module load python cutadapt 
 while read trim
-
 do
-
 cd $cwd/trim_forward
-
 cutadapt -g GTGYCAGCMGCCGCGGTAA --discard-untrimmed $cwd/trim_reverse/$trim.reverse_trim.fastq > $trim.both_trim.fastq
-
 cd $cwd
-
 done < trim2.txt
 
 And:
 #Step 12 alternative 2:  Remove forward primer and remove reads that are too long to have been trimmed successfully
+cwd=$(pwd)
 module load python cutadapt 
 while read trim
-
 do
-
 cd $cwd/trim_forward
-
 cutadapt -g GTGYCAGCMGCCGCGGTAA -M 278 $cwd/trim_reverse/$trim.reverse_trim.fastq > $trim.both_trim.fastq
-
 cd $cwd
-
 done < trim2.txt
 
 
